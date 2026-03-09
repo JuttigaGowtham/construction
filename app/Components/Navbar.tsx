@@ -36,11 +36,20 @@ const Navbar = () => {
         });
 
         window.addEventListener("scroll", handleScroll);
+
+        // Prevent scroll when mobile menu is open
+        if (mobileMenuOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "unset";
+        }
+
         return () => {
             window.removeEventListener("scroll", handleScroll);
             observer.disconnect();
+            document.body.style.overflow = "unset";
         };
-    }, []);
+    }, [mobileMenuOpen]);
 
     const navLinks = [
         { name: "HOME", href: "#home", id: "home" },
@@ -50,14 +59,40 @@ const Navbar = () => {
         { name: "CONTACT", href: "#contact", id: "contact" },
     ];
 
+    const menuVariants = {
+        closed: {
+            x: "100%",
+            transition: {
+                staggerChildren: 0.05,
+                staggerDirection: -1,
+                when: "afterChildren",
+            },
+        },
+        open: {
+            x: 0,
+            transition: {
+                staggerChildren: 0.1,
+                delayChildren: 0.2,
+                when: "beforeChildren",
+            },
+        },
+    };
+
+    const itemVariants = {
+        closed: { y: 20, opacity: 0 },
+        open: { y: 0, opacity: 1 },
+    };
+
     return (
         <nav
-            className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 border-b ${isScrolled
-                ? "bg-white/90 backdrop-blur-md py-3 border-black/10 shadow-sm"
-                : "bg-white/50 backdrop-blur-sm py-6 border-transparent"
+            className={`fixed top-0 left-0 w-full z-[100] transition-all duration-500 border-b ${mobileMenuOpen
+                ? "border-transparent bg-transparent py-3"
+                : isScrolled
+                    ? "bg-white/90 backdrop-blur-md py-3 border-black/10 shadow-sm"
+                    : "bg-white/50 backdrop-blur-sm py-6 border-transparent"
                 }`}
         >
-            <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <div className="max-w-7xl mx-auto px-6 flex justify-between items-center relative z-[101]">
                 {/* Logo */}
                 <Link href="/" className="flex items-center space-x-2 group">
                     <div className="w-8 h-8 flex items-center justify-center transition-colors duration-300 bg-black">
@@ -106,12 +141,32 @@ const Navbar = () => {
 
                 {/* Mobile Toggle */}
                 <button
-                    className="md:hidden flex flex-col space-y-1.5"
+                    className="md:hidden w-10 h-10 flex flex-col items-center justify-center space-y-1.5 focus:outline-none z-[101]"
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 >
-                    <span className={`w-6 h-0.5 bg-black transition-all ${mobileMenuOpen ? "rotate-45 translate-y-2" : ""}`}></span>
-                    <span className={`w-6 h-0.5 bg-black transition-all ${mobileMenuOpen ? "opacity-0" : ""}`}></span>
-                    <span className={`w-6 h-0.5 bg-black transition-all ${mobileMenuOpen ? "-rotate-45 -translate-y-2" : ""}`}></span>
+                    <motion.span
+                        animate={{
+                            rotate: mobileMenuOpen ? 45 : 0,
+                            y: mobileMenuOpen ? 7 : 0,
+                            width: mobileMenuOpen ? "24px" : "20px"
+                        }}
+                        className="h-0.5 bg-black block origin-center"
+                    ></motion.span>
+                    <motion.span
+                        animate={{
+                            opacity: mobileMenuOpen ? 0 : 1,
+                            x: mobileMenuOpen ? 10 : 0
+                        }}
+                        className="w-6 h-0.5 bg-black block"
+                    ></motion.span>
+                    <motion.span
+                        animate={{
+                            rotate: mobileMenuOpen ? -45 : 0,
+                            y: mobileMenuOpen ? -7 : 0,
+                            width: mobileMenuOpen ? "24px" : "12px"
+                        }}
+                        className="h-0.5 bg-black block origin-center self-end"
+                    ></motion.span>
                 </button>
             </div>
 
@@ -119,30 +174,57 @@ const Navbar = () => {
             <AnimatePresence>
                 {mobileMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, x: "100%" }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: "100%" }}
-                        transition={{ duration: 0.4, ease: "easeInOut" }}
-                        className="fixed inset-0 bg-white z-40 flex flex-col items-center justify-center space-y-8 md:hidden"
+                        initial="closed"
+                        animate="open"
+                        exit="closed"
+                        variants={menuVariants}
+                        className="fixed inset-0 bg-white z-[100] flex flex-col md:hidden"
                     >
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.name}
-                                href={link.href}
-                                onClick={() => setMobileMenuOpen(false)}
-                                className={`text-4xl font-black tracking-widest uppercase transition-colors ${activeSection === link.id ? "text-[#ff4d00]" : "text-black"
-                                    }`}
-                            >
-                                {link.name}
-                            </Link>
-                        ))}
-                        <Link
-                            href="#contact"
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="mt-4 px-10 py-4 bg-[#ff4d00] text-white text-sm font-bold tracking-widest hover:bg-black transition-colors shadow-xl"
-                        >
-                            GET A QUOTE
-                        </Link>
+                        {/* Background Decorative Element */}
+                        <div className="absolute top-0 right-0 w-full h-full overflow-hidden pointer-events-none opacity-5">
+                            <span className="absolute -right-20 -top-20 text-[60vh] font-black text-black leading-none">
+                                STRUX
+                            </span>
+                        </div>
+
+                        <div className="flex-1 flex flex-col justify-center px-10 space-y-10 relative z-10">
+                            <div className="flex flex-col space-y-6">
+                                {navLinks.map((link) => (
+                                    <motion.div key={link.name} variants={itemVariants}>
+                                        <Link
+                                            href={link.href}
+                                            onClick={() => setMobileMenuOpen(false)}
+                                            className={`text-5xl font-black tracking-tighter uppercase transition-colors flex items-center group ${activeSection === link.id ? "text-[#ff4d00]" : "text-black"
+                                                }`}
+                                        >
+                                            <span className="mr-4 text-xs font-bold tracking-widest text-black/20 group-hover:text-[#ff4d00] transition-colors">
+                                                {link.id === "home" ? "01" : link.id === "about" ? "02" : link.id === "services" ? "03" : link.id === "projects" ? "04" : "05"}
+                                            </span>
+                                            {link.name}
+                                        </Link>
+                                    </motion.div>
+                                ))}
+                            </div>
+
+                            <motion.div variants={itemVariants} className="pt-10 border-t border-black/5">
+                                <Link
+                                    href="#contact"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="inline-flex items-center space-x-4 bg-black text-white px-8 py-4 text-xs font-bold tracking-widest hover:bg-[#ff4d00] transition-colors"
+                                >
+                                    <span>GET A QUOTE</span>
+                                    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path>
+                                    </svg>
+                                </Link>
+
+                                <div className="mt-12 flex space-x-6 text-[10px] font-bold tracking-widest text-black/40">
+                                    <a href="#" className="hover:text-black transition-colors uppercase">Instagram</a>
+                                    <a href="#" className="hover:text-black transition-colors uppercase">LinkedIn</a>
+                                    <a href="#" className="hover:text-black transition-colors uppercase">Twitter</a>
+                                </div>
+                            </motion.div>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
