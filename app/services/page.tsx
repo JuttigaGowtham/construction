@@ -36,7 +36,7 @@ export default function ServicesPage() {
     ];
 
     return (
-        <div id="services" className="bg-white text-black font-sans selection:bg-[#ff4d00] selection:text-white pt-20">
+        <div className="bg-white text-black font-sans selection:bg-[#ff4d00] selection:text-white pt-20">
             {/* Header Section */}
             <section className="py-24 px-6 border-b border-black/5">
                 <div className="max-w-7xl mx-auto px-6">

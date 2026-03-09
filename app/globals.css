@@ -7,6 +7,10 @@
   --color-brand-orange: #ff4d00;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #050505;

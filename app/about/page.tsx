@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function AboutPage() {
     return (
-        <div id="about" className="bg-white text-black font-sans selection:bg-[#ff4d00] selection:text-white pt-20">
+        <div className="bg-white text-black font-sans selection:bg-[#ff4d00] selection:text-white pt-20">
             {/* Hero Header */}
             <section className="h-[60vh] flex items-center bg-white overflow-hidden relative border-b border-black/5">
                 <div className="max-w-7xl mx-auto px-6 w-full relative z-10">

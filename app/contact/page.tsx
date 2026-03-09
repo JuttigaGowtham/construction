@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function ContactPage() {
     return (
-        <div id="contact" className="bg-white text-black font-sans selection:bg-[#ff4d00] selection:text-white pt-20">
+        <div className="bg-white text-black font-sans selection:bg-[#ff4d00] selection:text-white pt-20">
             {/* Hero Header */}
             <section className="py-24 px-6 border-b border-black/5">
                 <div className="max-w-7xl mx-auto px-6">

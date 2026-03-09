@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export default function HomePage() {
     return (
-        <div id="home" className="bg-white text-black font-sans selection:bg-[#ff4d00] selection:text-white">
+        <div className="bg-white text-black font-sans selection:bg-[#ff4d00] selection:text-white">
             {/* Hero Section */}
             <section className="relative h-screen min-h-[700px] flex items-center overflow-hidden border-b border-black/5">
                 <div className="absolute top-0 right-0 w-[60%] h-full z-0 overflow-hidden grayscale opacity-20">

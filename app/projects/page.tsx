@@ -65,7 +65,7 @@ export default function ProjectsPage() {
     ];
 
     return (
-        <div id="projects" className="bg-white text-black font-sans selection:bg-[#ff4d00] selection:text-white pt-20">
+        <div className="bg-white text-black font-sans selection:bg-[#ff4d00] selection:text-white pt-20">
             {/* Header */}
             <section className="relative py-32 px-6 overflow-hidden bg-white border-b border-black/5">
                 <div className="absolute top-0 right-0 w-[50%] h-full z-0 grayscale opacity-10">
